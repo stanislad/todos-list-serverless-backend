@@ -1,0 +1,14 @@
+{
+  "name": "firstServerless",
+  "version": "1.0.0",
+  "description": "",
+  "dependencies": {
+    "aws-sdk": "^2.1692.0",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "file-type": "^20.0.0",
+    "file-type-cjs": "^1.0.7",
+    "magic-bytes.js": "^1.10.0",
+    "serverless-http": "^3.2.0"
+  }
+}
