@@ -33,6 +33,7 @@ app.post("/create/", async (req, res, next) => {
     const newTodo = {
         id,
         todo: req.body.todo,
+        description: req.body.description,
         createdAt,
         completed : false
     }

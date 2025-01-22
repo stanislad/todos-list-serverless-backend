@@ -56,12 +56,11 @@ functions:
     - http:
         path: /update/{id}
         method: POST
-        cors:
-            origin: '*'
-            methods:
-              - POST
-            headers:
-              - Content-Type
+        cors: true   
+        headers:
+          Access-Control-Allow-Origin: "'*'" # Static value
+          Access-Control-Allow-Methods: "'GET, POST, OPTIONS'"
+          Access-Control-Allow-Headers: "'Content-Type, Authorization'"
 
   deleteTodo:
     handler: src/deleteTodo.handler

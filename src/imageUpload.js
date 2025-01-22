@@ -54,8 +54,6 @@ app.put("/upload/:id", async (req, res, next) => {
 
         const imageUrl = `https://my-image-upload-bucket-1.s3-eu-west-1.amazonaws.com/${key}`;
 
-        
-
         const dynamodb = new AWS.DynamoDB.DocumentClient();
         const id = req.params.id
 
@@ -89,13 +87,3 @@ app.use((req, res, next) => {
 });
 
 exports.handler = serverless(app);
-
-
-//check mime and buffer
-// const fileInfo = filetypeinfo(buffer);
-// const detectedExt = fileInfo.ext;
-// const detectedMime = fileInfo.mime;
-// if (detectedMime !== body.mime) {
-//     return res.status(400).json({ message: 'mime types dont match' });
-// }
-// console.log(detectedMime+','+body.mime,'...'+detectedExt,'---',imageData)

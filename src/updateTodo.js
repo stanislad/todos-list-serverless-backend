@@ -18,6 +18,7 @@ app.post("/update/:id", async (req, res, next) => {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const id = req.params.id
     const todoName = JSON.parse(req.body).todo
+    const description = JSON.parse(req.body).description
 
     try {
       const result = await dynamodb.update({
@@ -25,8 +26,8 @@ app.post("/update/:id", async (req, res, next) => {
         Key: {
           id
         },
-        UpdateExpression: "set todo = :todo",
-        ExpressionAttributeValues:{":todo" : todoName},
+        UpdateExpression: "set todo = :todo, description = :description",
+        ExpressionAttributeValues:{":todo" : todoName, ":description": description},
         ReturnValues: "ALL_NEW"
         }).promise()
 
@@ -40,10 +41,6 @@ app.post("/update/:id", async (req, res, next) => {
     } catch (error) {
       console.log(error)
     }
-
-  return res.status(200).json({
-    message: todos,
-  });
 });
 
 app.use((req, res, next) => {
