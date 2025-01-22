@@ -1,7 +1,13 @@
 {
-  "name": "firstServerless",
-  "version": "1.0.0",
-  "description": "",
+  "name": "first-next-query-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build && next export",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "aws-sdk": "^2.1692.0",
     "cors": "^2.8.5",
