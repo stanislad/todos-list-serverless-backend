@@ -34,6 +34,7 @@ app.post("/create/", async (req, res, next) => {
         id,
         todo: req.body.todo,
         description: req.body.description,
+        dateTimeDb : req.body.dateTimeDb,
         createdAt,
         completed : false
     }

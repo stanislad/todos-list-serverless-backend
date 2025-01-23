@@ -19,6 +19,7 @@ app.post("/update/:id", async (req, res, next) => {
     const id = req.params.id
     const todoName = JSON.parse(req.body).todo
     const description = JSON.parse(req.body).description
+    const dateTimeDb = JSON.parse(req.body).dateTimeDb
 
     try {
       const result = await dynamodb.update({
@@ -26,8 +27,8 @@ app.post("/update/:id", async (req, res, next) => {
         Key: {
           id
         },
-        UpdateExpression: "set todo = :todo, description = :description",
-        ExpressionAttributeValues:{":todo" : todoName, ":description": description},
+        UpdateExpression: "set todo = :todo, description = :description, dateTimeDb = :dateTimeDb",
+        ExpressionAttributeValues:{":todo" : todoName, ":description": description, ":dateTimeDb": dateTimeDb},
         ReturnValues: "ALL_NEW"
         }).promise()
 
