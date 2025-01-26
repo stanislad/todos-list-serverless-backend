@@ -19,36 +19,34 @@ app.use(cors({
 // Enable JSON body parsing
 app.use(express.json());
 
-app.post("/create/", async (req, res, next) => {
+app.post("/register/", async (req, res, next) => {
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     // const =
     const createdAt = new Date().toISOString();
     const id = v4();
 
-    const newTodo = {
+    const newUser = {
         id,
-        todo: req.body.todo,
-        description: req.body.description,
-        dateTimeDb : req.body.dateTimeDb,
-        createdAt,
-        completed : false
+        email: req.body.email,
+        password: req.body.password,
+        createdAt
     }
 
     await dynamodb.put({
-        TableName: "TodoTable",
-        Item: newTodo
+        TableName: "UserTable",
+        Item: newUser
     }).promise()
 
   return res.status(200).json({
-    message: newTodo,
+    message: newUser,
   });
 });
 
 app.use((req, res, next) => {
 
   return res.status(404).json({
-    error: "Not Found1",
+    error: "Not Found8",
   });
 });
 

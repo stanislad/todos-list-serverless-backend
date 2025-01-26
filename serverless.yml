@@ -100,7 +100,32 @@ functions:
               - PUT
             headers:
               - Content-Type
-      
+
+  register:
+    handler: src/register.handler
+    events:
+      - http:
+          path: /register/
+          method: post
+          cors:
+            origin: '*'
+            methods:
+              - POST
+            headers:
+              - Content-Type
+
+  login:
+    handler: src/login.handler
+    events:
+      - http:
+          path: /login/
+          method: post
+          cors:
+            origin: '*'
+            methods:
+              - POST
+            headers:
+              - Content-Type
 
 resources:
  Resources:
@@ -108,6 +133,18 @@ resources:
     Type: AWS::DynamoDB::Table
     Properties:
       TableName: TodoTable
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S    
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  UserTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: UserTable
       BillingMode: PAY_PER_REQUEST
       AttributeDefinitions:
         - AttributeName: id
