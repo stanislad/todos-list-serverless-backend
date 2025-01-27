@@ -21,9 +21,15 @@ app.use(express.json());
 app.post("/register/", async (req, res, next) => {
 
     const dynamodb = new AWS.DynamoDB.DocumentClient();
-    // const =
+    
     const createdAt = new Date().toISOString();
     const id = v4();
+
+    if(await isEmailDublicate(dynamodb, req.body.email)){
+      return res.status(203).json({
+        info: "email already used",
+      });
+    }
 
     const plainPassword = req.body.password;
     const hashedPassword = await hashPassword(plainPassword)
@@ -41,7 +47,7 @@ app.post("/register/", async (req, res, next) => {
     }).promise()
 
     return res.status(200).json({
-      message: newUser,
+      info: 'success'
     });
 });
 
@@ -59,4 +65,21 @@ async function hashPassword(plainPassword) {
     const saltRounds = 10; // Number of hashing rounds (adjust as needed for security vs. performance)
     const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
     return hashedPassword;
+}
+
+async function isEmailDublicate(dynamodb, email){
+  const result = await dynamodb.scan({
+    TableName: "UserTable",
+    FilterExpression: "email = :email",
+    ExpressionAttributeValues: {
+      ":email": email,
+    },
+  }).promise();
+
+  console.log(email)
+  console.log(result.Items)
+  console.log(!!result.Items.length)
+
+
+  return !!result.Items.length
 }

@@ -47,7 +47,7 @@ app.post("/login/", async (req, res, next) => {
         console.log(storedHashedPassword, req.body.password)
         const isPasswordValid = await bcrypt.compare(req.body.password, storedHashedPassword);
         if(isPasswordValid) 
-          return res.status(200).json({message: "user authorised", user});
+          return res.status(200).json({info: "user authorised", userId : user[i].id});
         else 
           continue
       }
