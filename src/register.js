@@ -1,11 +1,10 @@
 const serverless = require("serverless-http");
 const express = require("express");
 const cors = require("cors");
-
 const app = express();
-
 const {v4}=require('uuid')
 const AWS =require('aws-sdk')
+const bcrypt = require('bcryptjs');
 
 // Enable CORS
 app.use(cors({
@@ -26,10 +25,13 @@ app.post("/register/", async (req, res, next) => {
     const createdAt = new Date().toISOString();
     const id = v4();
 
+    const plainPassword = req.body.password;
+    const hashedPassword = await hashPassword(plainPassword)
+
     const newUser = {
         id,
         email: req.body.email,
-        password: req.body.password,
+        password: hashedPassword,
         createdAt
     }
 
@@ -38,9 +40,9 @@ app.post("/register/", async (req, res, next) => {
         Item: newUser
     }).promise()
 
-  return res.status(200).json({
-    message: newUser,
-  });
+    return res.status(200).json({
+      message: newUser,
+    });
 });
 
 app.use((req, res, next) => {
@@ -51,3 +53,10 @@ app.use((req, res, next) => {
 });
 
 exports.handler = serverless(app);
+
+// Function to hash a password
+async function hashPassword(plainPassword) {
+    const saltRounds = 10; // Number of hashing rounds (adjust as needed for security vs. performance)
+    const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+    return hashedPassword;
+}
