@@ -11,7 +11,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.get("/:id", async (req, res, next) => {
+app.get("/todo/:id", async (req, res, next) => {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     const id = req.params.id
 

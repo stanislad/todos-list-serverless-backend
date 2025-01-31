@@ -11,7 +11,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.get("/", async (req, res, next) => {
+app.get("/todos/:userId", async (req, res, next) => {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
 
     let todos;
@@ -19,14 +19,18 @@ app.get("/", async (req, res, next) => {
     try {
       const results = await dynamodb.scan({
         TableName: "TodoTable",
+        FilterExpression: "userId = :userId",
+        ExpressionAttributeValues: {
+          ":userId": req.params.userId,
+        },
       }).promise()
       todos = results.Items
-    } catch (error) {
+    } catch (error) {``
       console.log(error)
     }
 
   return res.status(200).json({
-    message: todos,
+    message: (!todos || todos.length === 0) ? [] : todos,
   });
 });
 

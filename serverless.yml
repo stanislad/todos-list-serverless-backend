@@ -38,7 +38,7 @@ functions:
     handler: src/fetchTodo.handler
     events:
     - http:
-        path: /{id}
+        path: /todo/?id={id}&userId={userId}
         method: GET  
         cors: true   
 
@@ -46,7 +46,7 @@ functions:
     handler: src/fetchTodos.handler
     events:
     - http:
-        path: /
+        path: /todos/{userId}
         method: GET
         cors: true   
 
