@@ -19,7 +19,7 @@ app.use(cors({
 app.use(express.json());
 
 app.post("/register/", async (req, res, next) => {
-
+  try {
     const dynamodb = new AWS.DynamoDB.DocumentClient();
     
     const createdAt = new Date().toISOString();
@@ -46,9 +46,16 @@ app.post("/register/", async (req, res, next) => {
         Item: newUser
     }).promise()
 
+    await sendEmailAction(res, req.body.email)
+
     return res.status(200).json({
       info: 'success'
     });
+  } catch (error) {
+    return res.status(404).json({
+      error,
+    });
+  }
 });
 
 app.use((req, res, next) => {
@@ -76,10 +83,43 @@ async function isEmailDublicate(dynamodb, email){
     },
   }).promise();
 
-  console.log(email)
-  console.log(result.Items)
-  console.log(!!result.Items.length)
-
-
   return !!result.Items.length
+}
+
+async function sendEmailAction(res, email){
+  if(!['stasss@hotmail.co.uk', 'stassynenko@hotmail.co.uk'].includes(email)) return;
+  
+  const SES = new AWS.SES();
+
+  const message = `Hey New User
+
+  Thanks for registering to my app
+
+  Click this link to access your todo list https://main.d2vlpr5ro30apt.amplifyapp.com/`
+
+  const params = {
+    Destination: {
+      ToAddresses: [email]
+    },
+    Message: {
+      Body: {
+        Text: {
+          Data: message
+        },
+      },
+      Subject: {
+        Data: 'Todo app registration'
+      }
+    },
+    Source: 'stasss@hotmail.co.uk'
+  }
+
+  try {
+    await SES.sendEmail(params).promise()
+  } catch (error) {
+    console.log(error)
+    return res.status(400).json({
+      error: "Can't send email",
+    });
+  }
 }
